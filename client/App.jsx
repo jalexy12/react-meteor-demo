@@ -1,34 +1,31 @@
-App = class App extends React.Component {
+App = React.createClass ({
 
-	constructor(){
-		super()
-	}
+	mixins: [ReactMeteorData],
 
-	getTasks(){
-		return [
-		      { _id: 1, text: "This is task 1" },
-		      { _id: 2, text: "This is task 2" },
-		      { _id: 3, text: "This is task 3" }
-		    ];
-	}
+	getMeteorData: function() {
+	   return {
+	     items: ItemsCollection.find({}).fetch()
+	   };
+	 },
 
-	renderTasks(){
-		return this.getTasks().map((task) => {
-			return <Task key={task._id} task={task} />
-		})
-	}
+	getInitialState: function(){
+		return {}
+	},
 
-	render(){
+	render: function(){
 		return (
-			<div className="container">
-			  <header>
-			    <h1> Todo List </h1>
-			  </header>
-
-			  <ul>
-			  </ul>
-			</div>
-		)
+		     <div>
+		       <ul>
+		         {this.data.items.map(function (item) {
+		           return <li key={item._id}>{item.content}</li>;
+		         })}
+		       </ul>
+		       <form onSubmit={this.addItem}>
+		         <input type="text" ref="input"/>
+		         <button className="btn btn-primary" type="submit">Add Item</button>
+		       </form>
+		     </div>
+		   )
 	}
-}
+})
 
